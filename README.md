@@ -1,6 +1,6 @@
 # Pro Leak DDOS Mirai
 
-Pro Leak DDOS Mirai is a collection of Python scripts designed for educational purposes to demonstrate different types of Denial of Service (DoS) attacks. Inspired by the infamous Mirai botnet, these scripts showcase various techniques for sending a flood of packets to a target IP to overload and disrupt the service.
+Pro Leak DDOS Mirai is a collection of Python scripts inspired by the Mirai botnet, designed for educational purposes to demonstrate different types of Denial of Service (DoS) attacks. These scripts showcase various techniques for sending a flood of packets to a target IP to overload and disrupt the service, emulating attack strategies seen in the infamous Mirai botnet.
 
 ## Disclaimer
 
@@ -74,7 +74,3 @@ python3 attack_udp.py
 ## Contributing
 
 If you have any suggestions or improvements, feel free to create a pull request or open an issue.
-
-## License
-
-This project is licensed under the MIT License.
