@@ -1,6 +1,6 @@
 # Pro Leak DDOS Mirai
 
-Pro Leak DDOS Mirai is a collection of Python scripts inspired by the Mirai botnet, designed for educational purposes to demonstrate different types of Denial of Service (DoS) attacks. These scripts emulate various techniques used in large-scale botnets, sending floods of packets to a target IP to disrupt and overload services.
+Pro Leak DDOS Mirai is a collection of Python scripts inspired by the Mirai botnet, designed for educational purposes to demonstrate various types of Denial of Service (DoS) attacks. These scripts emulate different techniques used in large-scale botnets by sending floods of packets to a target IP to disrupt and overload services.
 
 ## Disclaimer
 
@@ -35,35 +35,19 @@ Pro Leak DDOS Mirai is a collection of Python scripts inspired by the Mirai botn
 
 ### 1. Raw UDP Flood
 
-The `raw_udp_flood.py` script sends UDP packets using raw sockets to the specified target.
-
-```bash
-python3 raw_udp_flood.py
-```
+The `raw_udp_flood` function sends UDP packets using raw sockets to the specified target.
 
 ### 2. SYN Flood
 
-The `syn_flood.py` script sends TCP SYN packets to a specified target, aiming to exhaust the target's ability to manage incoming connections.
-
-```bash
-python3 syn_flood.py
-```
+The `syn_flood` function sends TCP SYN packets to a specified target, aiming to exhaust the target's ability to manage incoming connections.
 
 ### 3. ACK Flood
 
-The `ack_flood.py` script sends TCP packets with the ACK flag set, which may pass through firewalls that only inspect connection initiation (SYN packets).
-
-```bash
-python3 ack_flood.py
-```
+The `ack_flood` function sends TCP packets with the ACK flag set, which may pass through firewalls that only inspect connection initiation (SYN packets).
 
 ### 4. GRE IP Flood
 
-The `gre_ip_flood.py` script sends GRE-encapsulated IP packets to multiple target IPs, with random payloads to obscure the attack signature.
-
-```bash
-python3 gre_ip_flood.py
-```
+The `send_gre_ip_packets` function sends GRE-encapsulated IP packets to multiple target IPs, with random payloads to obscure the attack signature.
 
 ### 5. Configurable Attack with `all.py`
 
@@ -98,10 +82,10 @@ This will execute the enabled attacks from the configuration file against the sp
 
 ## Code Overview
 
-- **raw_udp_flood.py**: Implements a UDP flood attack using raw sockets.
-- **syn_flood.py**: Executes a SYN flood attack to overwhelm TCP connections.
-- **ack_flood.py**: Performs an ACK flood attack, typically bypassing basic firewall defenses.
-- **gre_ip_flood.py**: Launches a GRE IP flood with encapsulated UDP payloads to multiple targets.
+- **raw_udp_flood**: Implements a UDP flood attack using raw sockets.
+- **syn_flood**: Executes a SYN flood attack to overwhelm TCP connections.
+- **ack_flood**: Performs an ACK flood attack, typically bypassing basic firewall defenses.
+- **send_gre_ip_packets**: Launches a GRE IP flood with encapsulated UDP payloads to multiple targets.
 - **all.py**: Manages multiple attacks through a configuration file (`attack_config.ini`).
 
 ## Contributing
